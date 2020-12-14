@@ -48,7 +48,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag: ${{ steps.previoustag.outputs.tag }}
+        tag_name: ${{ steps.previoustag.outputs.tag }}
         release_name: Music Bot
         draft: false
         prerelease: false
