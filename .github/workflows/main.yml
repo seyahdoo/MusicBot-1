@@ -41,16 +41,20 @@ jobs:
       id: build_script
       run: pyinstaller --onefile run.py
       
+    - name: 'Get Previous tag'
+      id: previoustag
+      uses: "WyriHaximus/github-action-get-previous-tag@master"
+      
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Music Bot Release ${{ github.ref }}
+        tag_name: ${{ steps.previoustag.outputs.tag }}
+        release_name: Music Bot ${{ steps.previoustag.outputs.tag }}
         draft: false
-        prerelease: true
+        prerelease: false
 
     - name: Upload Release Asset Excecutable
       uses: actions/upload-release-asset@v1.0.1
