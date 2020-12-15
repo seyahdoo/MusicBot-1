@@ -19,6 +19,7 @@ jobs:
       run: |
         git config --global user.email "ci@ci.com"
         git config --global user.name "Continuous Integration"
+        
     - name: Reattach HEAD
       run: git checkout "$(echo ${{ github.ref }} | sed -E 's|refs/[a-zA-Z]+/||')"
 
@@ -39,19 +40,17 @@ jobs:
     - name: Build
       id: build_script
       run: pyinstaller --onefile run.py
-    - name: 'Get Previous tag'
-      id: previoustag
-      uses: "WyriHaximus/github-action-get-previous-tag@master"
+      
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1.0.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ steps.previoustag.outputs.tag }}
-        release_name: Music Bot
+        tag_name: ${{ github.ref }}
+        release_name: Music Bot Release ${{ github.ref }}
         draft: false
-        prerelease: false
+        prerelease: true
 
     - name: Upload Release Asset Excecutable
       uses: actions/upload-release-asset@v1.0.1
@@ -60,5 +59,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./dist/run
-        asset_name: run.exe
+        asset_name: music-bot-linux
         asset_content_type: application/exe
